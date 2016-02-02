@@ -16,7 +16,6 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.iokays.build.domain.builder.ClazzAttributeBuilder;
-import com.iokays.tools.test.domain.TestDomain;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -249,12 +248,5 @@ public class MybatisRepositoryBuilder {
 //		xmlWriter.write(document);
 //		xmlWriter.close();
 //		System.out.println(writer.toString());
-	}
-	
-	public static void main(String[] args) throws IOException {
-		final Class<?> clazz = TestDomain.class;
-		final MybatisRepositoryBuilder clazzBuilder = new MybatisRepositoryBuilder(clazz, "id", "pageId");
-		clazzBuilder.build().writeTo(System.out);
-		clazzBuilder.buildXML();
 	}
 }

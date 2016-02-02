@@ -8,16 +8,19 @@
  */
 
 // Apply the java plugin to add support for Java
-apply plugin: "maven-publish"
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
+
+group = 'com.iokays'
+version = '1.0'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use 'jcenter' for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-     maven { url 'http://localhost:8081/nexus/content/groups/public' }
+     maven { url 'http://192.168.0.8:7788/nexus/content/groups/public' }
 }
 
 // In this section you declare the dependencies for your production and test code
@@ -38,4 +41,20 @@ dependencies {
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url "D:\\repository\\.m2"
+        }
+    }
 }

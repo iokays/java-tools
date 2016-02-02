@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.iokays.build.domain.builder.ClazzFieldsBuilder;
-import com.iokays.tools.test.domain.TestDomain;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -90,10 +89,5 @@ public class ElasticServiceBuilder {
 		return JavaFile.builder(classImplName.packageName(), builder.build()).build();
 	}
 
-	public static void main(String[] args) throws IOException {
-		final Class<?> clazz = TestDomain.class;
-		final ElasticServiceBuilder clazzBuilder = new ElasticServiceBuilder(clazz);
-		clazzBuilder.build().writeTo(System.out);
-		clazzBuilder.buildImpl().writeTo(System.out);
-	}
+	
 }

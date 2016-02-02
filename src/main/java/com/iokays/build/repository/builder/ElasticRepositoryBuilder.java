@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.iokays.build.domain.builder.ClazzFieldsBuilder;
-import com.iokays.tools.test.domain.TestDomain;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -410,10 +409,5 @@ public class ElasticRepositoryBuilder {
 		return JavaFile.builder(classImplName.packageName(), builder.build()).build();
 	}
 	
-	public static void main(String[] args) throws IOException {
-		final Class<?> clazz = TestDomain.class;
-		final ElasticRepositoryBuilder clazzBuilder = new ElasticRepositoryBuilder(clazz);
-		clazzBuilder.build().writeTo(System.out);
-		clazzBuilder.buildImpl().writeTo(System.out);
-	}
+	
 }
