@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import javax.lang.model.element.Modifier;
 
+import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -20,8 +21,7 @@ public class ClazzBuilderBuilder {
 	protected final String clazzName;
 	protected final String packageName;
 	protected boolean hasUpdate = false;
-	protected String preUpdate;
-	protected String sufUpdate;
+	protected Class<?> filedClazz;
 	
 	public ClazzBuilderBuilder(Class<?> clazz) {
 		this.clazz = clazz;
@@ -30,27 +30,12 @@ public class ClazzBuilderBuilder {
 		clazzName = this.clazz.getSimpleName() + "Builder";
 	}
 
-	public ClazzBuilderBuilder hasUpdate() {
-		return hasUpdate(true);
+	public ClazzBuilderBuilder hasUpdate(Class<?> filedClazz) {
+		this.hasUpdate = true;
+		this.filedClazz = filedClazz;
+		return this;
 	}
 
-	public ClazzBuilderBuilder hasUpdate(boolean hasUpdate) {
-		this.hasUpdate = hasUpdate;
-		return this;
-	}
-	
-	public ClazzBuilderBuilder preUpdate(String preUpdate) {
-		hasUpdate();
-		this.preUpdate = preUpdate;
-		return this;
-	}
-	
-	public ClazzBuilderBuilder sufUpdate(String sufUpdate) {
-		hasUpdate();
-		this.sufUpdate = sufUpdate;
-		return this;
-	}
-	
 	public JavaFile build() {
 		final Builder builder = TypeSpec.classBuilder(clazzName).addModifiers(Modifier.PUBLIC);
 		final Field[] fields = clazz.getDeclaredFields();
@@ -79,19 +64,24 @@ public class ClazzBuilderBuilder {
 				if ((java.lang.reflect.Modifier.isPrivate(mod) || java.lang.reflect.Modifier.isProtected(mod))
 						&& !java.lang.reflect.Modifier.isFinal(mod)
 						&& !java.lang.reflect.Modifier.isStatic(mod)) {
-					com.squareup.javapoet.MethodSpec.Builder setMethodBuilder = MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC)
+					MethodSpec.Builder setMethodBuilder = MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC)
 							.returns(ClassName.get(packageName, clazzName))
 							.addParameter(field.getType(), name)
 							.addStatement("entity.set$L($L)", name.substring(0, 1).toUpperCase() + name.substring(1, name.length()), name);
 					if (hasUpdate) {
-						setMethodBuilder.addStatement("map.put($S, $L)", field.getName(), field.getName());
+						setMethodBuilder.addStatement("map.put($L.$L, $L)", filedClazz.getSimpleName(), CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, field.getName()), field.getName());
 					}
 					setMethodBuilder.addStatement("return this");
+					setMethodBuilder.addJavadoc("set $L value\n", field.getName());
+					setMethodBuilder.addJavadoc("@param $L XXXXXXX\n", field.getName());
+					setMethodBuilder.addJavadoc("@return this\n");
 					builder.addMethod(setMethodBuilder.build());
 					
-					com.squareup.javapoet.MethodSpec.Builder getMethodBuilder = MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC)
+					MethodSpec.Builder getMethodBuilder = MethodSpec.methodBuilder(name).addModifiers(Modifier.PUBLIC)
 							.returns(field.getType())
 							.addStatement("return entity.get$L()", name.substring(0, 1).toUpperCase() + name.substring(1, name.length()));
+					getMethodBuilder.addJavadoc("get $L value\n", field.getName());
+					setMethodBuilder.addJavadoc("@return XXXXXXX\n");
 					builder.addMethod(getMethodBuilder.build());
 				}
 			}

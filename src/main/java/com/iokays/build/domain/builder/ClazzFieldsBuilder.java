@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import javax.lang.model.element.Modifier;
 
+import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -35,7 +36,7 @@ public class ClazzFieldsBuilder {
 						&& !java.lang.reflect.Modifier.isFinal(mod)
 						&& !java.lang.reflect.Modifier.isStatic(mod)) {
 					
-					FieldSpec param = FieldSpec.builder(String.class, name)
+					FieldSpec param = FieldSpec.builder(String.class, CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, name))
 						    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL).initializer("$S", name)
 						    .build();
 					builder.addField(param);

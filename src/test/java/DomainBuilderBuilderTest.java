@@ -13,7 +13,7 @@ public class DomainBuilderBuilderTest {
 	public void testBuild() throws IOException {
 		final Class<?> clazz = TestDomain.class;
 
-		final ClazzBuilderBuilder clazzBuilder = new ClazzBuilderBuilder(clazz).hasUpdate();
+		final ClazzBuilderBuilder clazzBuilder = new ClazzBuilderBuilder(clazz).hasUpdate(clazz);
 		clazzBuilder.build().writeTo(System.out);
 
 		final ClazzFieldsBuilder clazzFieldsBuilder = new ClazzFieldsBuilder(clazz);
