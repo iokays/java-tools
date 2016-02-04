@@ -36,7 +36,7 @@ public class ObjectParam implements Serializable {
 	}
 
 	public String toMarkdown() {
-		return "|" + this.getName() + " |是 |" + this.getType() + " |" + this.getJavadoc() + "";
+		return "|" + this.getName() + " |是 |" + this.getType() + " |" + this.getJavadoc() + " |";
 	}
 
 	@Override
