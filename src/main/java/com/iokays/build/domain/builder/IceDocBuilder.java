@@ -1,11 +1,11 @@
 package com.iokays.build.domain.builder;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ public class IceDocBuilder {
 	public List<StructParam> build() throws IOException {
 		final List<StructParam>  structs = Lists.newArrayList();
 		
-		final List<String> list = Files.readAllLines(Paths.get(iceParams));
+		final List<String> list = Files.readAllLines(Paths.get(iceParams), Charset.defaultCharset());
 		final String content = Joiner.on("").join(list);
 		int mark = content.indexOf(struct);
 		while (mark != -1) {
@@ -47,7 +47,7 @@ public class IceDocBuilder {
 						param = param.trim();
 						final ObjectParam ice = new ObjectParam();
 						final int fromDoc = param.indexOf("/**");
-						int endDoc = 0;
+						int endDoc = -1;
 						if (-1 != fromDoc) {
 							endDoc = param.indexOf("*/");
 							if (-1 != endDoc) {
